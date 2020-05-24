@@ -20,4 +20,9 @@ cp ghostdb.service /lib/systemd/system
 chmod 755 /lib/systemd/system/ghostdb.service
 chown -R ghostdbservice:ghostdbservice /home/ghostdbservice
 systemctl daemon-reload
+echo "Successfully reloaded daemons..."
 systemctl start ghostdb
+echo "Successfully started ghostdb service..."
+systemctl enable ghostdb
+echo "Successfully enabled ghostdb service..."
+echo "GhostDB successfully installed!"
