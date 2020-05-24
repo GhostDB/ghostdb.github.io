@@ -1,7 +1,7 @@
 #!/bin/bash
 
 wget https://ghostdb.github.io/linux/latest/ghostdb
-wget https://www.ghostcache.net/linux/ghostdb.service
+wget https://ghostdb.github.io/linux/ghostdb.service
 
 if [ grep -q "ghostdbservice" /etc/passwd ]; then 
     echo "ghostdbservice user already exists!";
