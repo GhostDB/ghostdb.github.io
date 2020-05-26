@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>GhostDB Documentation</title>
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <link rel="shortcut icon" href="favicon.ico">  
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+    <!-- FontAwesome JS -->
+    <script defer src="assets/fontawesome/js/all.js"></script>
+    <!-- Global CSS -->
+    <link rel="stylesheet" href="assets/plugins/bootstrap/css/bootstrap.min.css">   
+    <!-- Plugins CSS -->    
+    <link rel="stylesheet" href="assets/plugins/prism/prism.css">
+    <link rel="stylesheet" href="assets/plugins/elegant_font/css/style.css">  
+      
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="assets/css/styles.css">
+    
+</head> 
+
+<body class="body-green">
+    <div class="page-wrapper">
+        <!-- ******Header****** -->
+        <header id="header" class="header">
+            <div class="container">
+                <div class="branding">
+                    <h1 class="logo">
+                        <a href="index.html">
+                            <img style="width: 50px; height:50px;" src="assets/images/demo/logotest.png" alt="">
+                            <span class="text-highlight">GhostDB</span><span class="text-bold">Docs</span>
+                        </a>
+                    </h1> 
+                    
+                </div><!--//branding-->
+                
+            </div><!--//container-->
+        </header><!--//header-->
+        <div class="doc-wrapper">
+            <div class="container">
+                <div id="doc-header" class="doc-header">
+                    <div class="meta"><i class="far fa-clock"></i> Last updated: May 28th, 2020</div>
+                </div><!--//doc-header-->
+                <div class="doc-body row">
+                    <div class="doc-content col-md-9 col-12 order-1">
+                        <div class="content-inner">
+                            <section id="installation-section" class="doc-section">
+                                <h2 class="section-title">GhostDB Node</h2>
+                                <div id="step1"  class="section-block">
+                                    <h3 class="block-title">Installation</h3>
+                                    <p>Currently GhostDB is only available for Linux. In order to download GhostDB for Linux click the download link below. This will download the GhostDB installation script. 
+                                    </p>
+                                    <a href="#" onclick="window.open('https://ghostdb.github.io/linux/ghostdb_installer.sh')" target="_blank" class="btn btn-green" target="_blank"><i class="fas fa-download"></i> Download GhostDB for Linux</a>
+                                    
+                                    <div class="code-block">
+                                        <p>Once downloaded the next thing you must do is run the installation script at the terminal. This will download the GhostDB binary file and the systemd service file and move them to their respective directories. It will also set up the neccessary linux user and user group.
+                                        </p>
+                                        <h6>Install GhostDB:</h6>
+                                        <pre><code class="language-git">$ sh ./ghostdb_installer.sh</code></pre>
+                                        <p>If you encounter errors when running the installation script, try again with elevated privileges using the sudo command.
+                                        </p>
+                                        <pre><code class="language-git">$ sudo bash ./ghostdb_installer.sh</code></pre>
+                                        <br>
+                                        <div class="callout-block callout-success">
+                                            <div class="icon-holder">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </div><!--//icon-holder-->
+                                            <div class="content">
+                                                <h4 class="callout-title">Tip:</h4>
+                                                <p>GhostDB communicates on port 7991. Be sure to allow in-comming an out-going traffic on this port.</p>
+                                            </div><!--//content-->
+                                        </div>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="step2"  class="section-block">
+                                    <h3 class="block-title">Configuration</h3>
+                                    <p>Once installed, you must create a configuration file for your cache. This file must be located in a directory called /ghostdb. The /ghostdb directory must be in your home directory. The configuration file is a json file and must be called “ghost_conf.json”. There are multiple configuration options available to you. To start you must specify the keyspace size of the cache. This is the maximum number of key/value pairs you want to allow your cache to store. In the configuration file you set this value as follows:
+                                    </p>
+                                    <pre><code class="language-javascript">"keyspaceSize": 65536</code></pre>
+                                    <p>If this value is not specified, the default is the same as the above.</p>
+                                    <p>The next configuration option you have available to you is the default time-to-live for key/value pairs. This is the number of seconds a key/value pair is considered “not-stale”. If, when using the SDK and you do not set a time-to-live on a key/value pair when storing, the default will be set to “-1”. This means the item does not expire. Otherwise, the value you provide will override the value in the configuration file. You set this value as follows in the configuration: “defaultTTL”: -1 The next configuration option is the crawler interval configuration. This is an integer value that represents how often the cache crawlers should run. The cache crawlers are concurrent crawlers that remove expired items from the cache. By default this is set to 300 seconds (5 minutes). This is set as follows in the cache:
+                                    </p>
+                                    <pre><code class="language-javascript">"crawlerInterval": 300</code></pre>
+                                    <div class="callout-block callout-success">
+                                        <div class="icon-holder">
+                                            <i class="fas fa-thumbs-up"></i>
+                                        </div><!--//icon-holder-->
+                                        <div class="content">
+                                            <h4 class="callout-title">Tip:</h4>
+                                            <p>If you classify data as stale after a very short period of time, we recommend setting this number very low.</p>
+                                        </div><!--//content-->
+                                    </div>
+                                    <p>The next configuration option is the snitch metric interval configuration. This is an integer value that represents how often the snitch metrics sub-system should log system metrics in seconds. This is set to 300 by default (5 minutes). This is set as follows in the cache:</p>
+                                    <pre><code class="language-javascript">"snitchMetricInterval": 300</code></pre>
+                                    <p>The next configuration option is the watchdog metric interval configuration. This is an integer value that represents how often the watchdog metrics system should log application metrics in seconds. This is set to 300 by default (5 minutes). This is set as follows in the configuration file:</p>
+                                    <pre><code class="language-javascript">"watchdogMetricInterval": 300</code></pre>
+                                    <p>The next configuration option enables snapshotting within the cache. This is enabled by default and is set in the configuration file as follows:</p>
+                                    <pre><code class="language-javascript">"snapshotInterval": 3600</code></pre>
+                                    <p>The next configuration option determines if your snapshots should be encrypted. This is set to true by default and is set in the configuration file as follows:</p>
+                                    <pre><code class="language-javascript">"enableEncryption": true</code></pre>
+                                    <p>In order to enable encryption you must also supply a passphrase for encrypting and decrypting the snapshots. This is set to “SUPPLY_ME” by default and should be updated. It is set as follows in the configuration:</p>
+                                    <pre><code class="language-javascript">"passphrase": "SUPPLY_ME"</code></pre>
+                                    <p>The next option available to you determines if append-only-file persistence should be used. By default this is set to false. This is set in the configuration file as follows:</p>
+                                    <pre><code class="language-javascript">"persistenceAOF": false</code></pre>
+                                    <p>The next configuration option available determines the maximum byte size of the append-only-file can grow to before it is rotated. By default this is set to 5000000 (5MB). This is set in the configuration as follows:</p>
+                                    <pre><code class="language-javascript">"aofMaxByteSize": 5000000</code></pre>
+                                    <p>If both snapshots and append-only-file are enabled in the cache, snapshots will take precedence over append-only-file. All snapshots are also compressed using gzip. This is not a configurable option. These are all the configuration options available. Below is an example of a complete configuration file:</p>
+                                    <pre><code class="language-javascript">
+{
+    "keyspaceSize": 65536,
+    "snitchMetricInterval": 300,
+    "watchdogMetricInterval": 300,
+    "defaultTTL": -1,
+    "crawlerInterval": 300,
+    "snapshotInterval": 3600,
+    "snapshotEnabled": true,
+    "persistenceAOF": false,
+    "aofMaxByteSize": 50000000,
+    "entryTimestamp": true,
+    "enableEncryption": true,
+    "passphrase": "SUPPLY_ME"
+}
+                                    </code></pre>
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            
+                            <section id="code-section" class="doc-section">
+                                <h2 class="section-title">GhostDB SDK for Python</h2>
+                                <div id="html" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Installation</h6>
+                                        <p>The GhostDB Python SDK can be installed using pip at the command line:</p>
+                                        <pre><code class="language-git">$ pip install ghostdb</code></pre>
+                                        <p>Once installed, you must create a configuration file in order for the GhostDB SDK to interact with your GhostDB cluster. You can name this file whatever you like. Inside this file you must include the IP address of each GhostDB node, one IP address per line. You do not need to include the port as GhostDB uses port 7991. An example configuration file can be found below:</p>
+                                        <pre><code class="language-git">
+10.23.20.11
+10.23.20.12
+10.23.22.6
+                                        </code></pre>
+                                        <p>Now you are ready to integrate GhostDB into your Python application.</p>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="css" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Importing GhostDB</h6>
+                                        <p>Now that the GhostDB SDK has been installed and configured, you can now integrate GhostDB into your application. The first thing you must do is import the SDK:</p>
+                                        <pre><code class="language-python">from GhostDB.cache import Cache</code></pre>
+                                        <p>Next, you must create a cache instance. To do this you must pass the name of your configuration file (the file containing IP addresses of GhostDB Nodes).</p>
+                                        <pre><code class="language-python">ghostdb = Cache('gdb.conf')</code></pre>
+                                        <p>Now that everything has been set up, you can interact with your cluster. The GhostDB SDK for Python provides eight methods you can use to interact with your cluster.</p>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="sass" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Retrieval Methods</h6>
+                                        <p>The first method is get(). This method requires you to pass a key which must be a string. If there exists a key/value pair with the key you passed in your distributed cache cluster, you will be returned the key/value pair, otherwise, you will be returned the string “CACHE_MISS”. An example of this is below:</p>
+                                        <pre><code class="language-python">data = ghostdb.get("mykey")</code></pre>
+                                        <p>The variable data will now contain one of two things:</p>
+                                        <pre><code class="language-javascript">{ "Message": { "Key": … , "Value": … } }
+{ "Message": "CACHE_MISS" })</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="less" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Storage Methods</h6>
+                                        <p>GhostDB has two storage commands: put() and add().
+                                        <br>
+                                        The put() method takes three arguments: put(key, value, ttl)
+                                        <br>
+                                        The key parameter must be a string. The value parameter can be whatever type you like. The ttl parameter is the time-to-live for the object in the cache. It is an optional argument.
+                                        <br>
+                                        For example, if the ttl was set to 300 then this key/value pair will be considered to be expired after 300 seconds and automatically removed from the cache after that time. The ttl parameter must be an int.
+                                        <br>
+                                        If you do not want your key/value object to expire in the cache then you may set the time-to-live to be -1.
+                                        <br>
+                                        The add() method takes three arguments too: add(key, value, ttl)
+                                        <br>
+                                        The parameters are the same as they are for put()as well as the return types.
+                                        <br>
+                                        The put() method will overwrite a key/value pair if the key already exists. The add() method will only write a key/value pair if the key does not exist.
+                                        <br>
+                                        You use both methods as follows:</p>
+                                        <pre><code class="language-python">resultPut = ghostdb.put("myKey", "myValue", -1)
+resultAdd = ghostdb.add("myKey", "myValue", -1)</code></pre>
+                                        <p>The return types of both calls are as follows:</p>
+                                        <pre><code class="language-javascript">resultPut: {"Message": "STORED"}
+resultAdd: {"Message": "NOT_STORED"}</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                
+                                
+                                <div id="javascript" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Deletion Methods</h6>
+                                        <p>There are two deletion methods in GhostDB. The first deletion method is the delete() method. This method requires that a key is passed. The key must be of type string. If there exists a key/value pair with the key you passed to the method, then it will be removed from the cache, otherwise, you will be returned a string saying the key could not be found. Below is example usage of this method:</p>
+                                        <pre><code class="language-python">res = ghostdb.delete("myKey")</code></pre>
+                                        <p>The variable res will now contain one of two things:</p>
+                                        <pre><code class="language-javascript">{ "Message": "REMOVED" }
+{ "Message": "NOT_FOUND" }</code></pre>
+                                        <p>The second deletion method is flush(). This method will clear all key/value pairs from all cache nodes and is used as follows:</p>
+                                        <pre><code class="language-python">res = ghostdb.flush()</code></pre>
+                                        <p>The variable res will now contain one of two things:</p>
+                                        <pre><code class="language-javascript">{ "Message": "FLUSHED" }
+{ "Message": "ERR_FLUSH" }</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="python" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Metrics Methods</h6>
+                                        <p>GhostDB provides two commands to give you access to cache metrics. The first method is getSnitchMetrics(). This will return the system metrics for each server as an array. An example usage and return can be found below:</p>
+                                        <pre><code class="language-python">metrics = ghostdb.getSnitchMetrics()</code></pre>
+                                        <p>The return result will look similar to the below:</p>
+                                        <pre><code class="language-javascript">{
+    "metrics": [ 
+        { 
+            "node": "10.23.34.4", 
+            "data": [{...}, … , {...}] 
+        }, 
+        {...} 
+    ]
+}</code></pre>
+                                        <p>The second metrics method is getWatchdogMetrics(). This will return the application metrics for each server as an array. An example usage and return can be found below:</p>
+                                        <pre><code class="language-python">metrics = ghostdb.getWatchdogMetrics()</code></pre>
+                                        <p>The return from this call will have a similar format to the below:</p>
+                                        <pre><code class="language-javascript">{
+    "metrics": [
+        {
+            "node": "10.23.34.4",
+            "data": [ {...}, ..., {...} ]
+        },
+        {...}
+    ]
+}</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="php" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Ping Method</h6>
+                                        <p>The ping method will return an object containing an array of all GhostDB Cache Nodes that could be reached. It is used as follows:</p>
+                                        <pre><code class="language-python">cache_servers = ghostdb.ping()</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="handlebars" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Error Types</h6>
+                                        <p>There are two GhostDB specific errors that might be thrown during the execution of GhostDB methods. The first is the <code>GhostNoMoreServersError</code>. This error will be thrown if no servers in your cache cluster are reachable. The second is the <code>GhostKeyError</code>. This error is thrown if any key you provide to a GhostDB storage, deletion or retrieval method is not of type string. You can catch these errors as follows:</p>
+                                        <pre><code class="language-python">try: 
+    # your code here
+except ghostdb.GhostNoMoreServersError as e:
+    # handle exception</code></pre>
+                                        <p>Replace <code>ghostdb.GhostNoMoreServersError</code> with <code>ghostdb.GhostKeyError</code> to catch the key error.</p>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+
+
+
+                            <section id="callouts-section" class="doc-section">
+                                <h2 class="section-title">GhostDB SDK for Node.js</h2>
+                                <div id="html2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Installation</h6>
+                                        <p>The GhostDB Node.js SDK can be installed using npm at the command line:</p>
+                                        <pre><code class="language-git">$ npm install ghost-db-sdk</code></pre>
+                                        <p>To install the SDK so that it is added to your package.json file, you can use the following command:</p>
+                                        <pre><code class="language-git">$ npm install --save ghost-db-sdk</code></pre>
+                                        <p>Once installed, you must create a configuration file in order for the GhostDB SDK to interact with your GhostDB cluster. You can name this file whatever you like. An example configuration file can be found below:</p>
+                                        <pre><code class="language-git">
+10.23.20.11
+10.23.20.12
+10.23.22.6
+                                        </code></pre>
+                                        <p>Now you are ready to integrate GhostDB into your Node.js application.</p>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="css2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Importing GhostDB</h6>
+                                        <p>Now that the GhostDB SDK has been installed and configured, you can now integrate GhostDB into your application. The first thing you must do is import the SDK:</p>
+                                        <pre><code class="language-javascript">ghostdb = require('ghost-db-sdk');</code></pre>
+                                        <p>Next, you must create a cache instance. To do this you must pass the name of your configuration file (the file containing IP addresses of GhostDB Nodes). For this guide we also use the 'path' package. If you do not have this package as a dependency on your project, you will need to install it.</p>
+                                        <pre><code class="language-javascript">cache = new ghostdb(path.resolve(__dirname, 'gdb.conf'));</code></pre>
+                                        <p>Now that everything has been set up, you can interact with your cluster. The GhostDB SDK for Node.js provides eight asynchronous methods you can use to interact with your cluster.</p>
+                                         <div class="callout-block callout-success">
+                                            <div class="icon-holder">
+                                                <i class="fas fa-thumbs-up"></i>
+                                            </div><!--//icon-holder-->
+                                            <div class="content">
+                                                <h4 class="callout-title">Tip:</h4>
+                                                <p>All methods for GhostDB SDK for Node.js are asynchronous. If you receive an error when using any of the below methods inside a function, please ensure your function is asynchronous. This can be achieved by using the <code>async</code> keyword.</p>
+                                            </div><!--//content-->
+                                        </div>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="sass2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Retrieval Methods</h6>
+                                        <p>The first method is get(). This method requires you to pass a key which must be a string. If there exists a key/value pair with the key you passed in your distributed cache cluster, you will be returned the key/value pair, otherwise, you will be returned the string “CACHE_MISS”. An example of this is below:</p>
+                                        <pre><code class="language-javascript">data = await cache.get("mykey")</code></pre>
+                                        <p>The variable data will now contain one of two things:</p>
+                                        <pre><code class="language-javascript">{ "Message": { "Key": … , "Value": … } }
+{ "Message": "CACHE_MISS" })</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="less2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Storage Methods</h6>
+                                        <p>GhostDB has two storage commands: put() and add(). The put() method takes three arguments: <code>put(key, value, ttl)</code> The key parameter must be a string. The value parameter can be whatever type you like. The ttl parameter is the time-to-live for the object in the cache. For example, if the ttl was set to 300 then this key/value pair will be considered to be expired after 300 seconds and automatically removed from the cache after that time. The ttl parameter must be an int. If you do not want your key/value object to expire in the cache then you may set the time-to-live to be -1. The add() method takes three arguments too: <code>add(key, value, ttl)</code> The parameters are the same as they are for put()as well as the return types. The put() method will overwrite a key/value pair if the key already exists. The add() method will only write a key/value pair if the key does not exist. You use both methods as follows:</p>
+                                        <pre><code class="language-javascript">resultPut = await cache.put("myKey", "myValue", -1)
+resultAdd = await cache.add("myKey", "myValue", -1)</code></pre>
+                                        <p>The return types of both calls are as follows:</p>
+                                        <pre><code class="language-javascript">resultPut: {"Message": "STORED"}
+resultAdd: {"Message": "NOT_STORED"}</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                
+                                
+                                <div id="javascript2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Deletion Methods</h6>
+                                        <p>There are two deletion methods in GhostDB. The first deletion method is the delete() method. This method requires that a key is passed. The key must be of type string. If there exists a key/value pair with the key you passed to the method, then it will be removed from the cache, otherwise, you will be returned a string saying the key could not be found. Below is example usage of this method:</p>
+                                        <pre><code class="language-javascript">res = await cache.delete("myKey")</code></pre>
+                                        <p>The variable res will now contain one of two things:</p>
+                                        <pre><code class="language-javascript">{ "Message": "REMOVED" }
+{ "Message": "NOT_FOUND" }</code></pre>
+                                        <p>The second deletion method is flush(). This method will clear all key/value pairs from all cache nodes and is used as follows:</p>
+                                        <pre><code class="language-javascript">res = await cache.flush()</code></pre>
+                                        <p>The variable res will now contain one of two things:</p>
+                                        <pre><code class="language-javascript">{ "Message": "FLUSHED" }
+{ "Message": "ERR_FLUSH" }</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="python2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Metrics Methods</h6>
+                                        <p>GhostDB provides two commands to give you access to cache metrics. The first method is getSnitchMetrics(). This will return the system metrics for each server as an array. An example usage and return can be found below:</p>
+                                        <pre><code class="language-javascript">metrics = await cache.getSnitchMetrics()</code></pre>
+                                        <p>The return result will look similar to the below:</p>
+                                        <pre><code class="language-javascript">{
+    "metrics": [ 
+        { 
+            "node": "10.23.34.4", 
+            "data": [{...}, … , {...}] 
+        }, 
+        {...} 
+    ]
+}</code></pre>
+                                        <p>The second metrics method is getWatchdogMetrics(). This will return the application metrics for each server as an array. An example usage and return can be found below:</p>
+                                        <pre><code class="language-javascript">metrics = await cache.getWatchdogMetrics()</code></pre>
+                                        <p>The return result will look similar to the below:</p>
+                                        <pre><code class="language-javascript">{
+    "metrics": [
+        {
+            "node": "10.23.34.4",
+            "data": [ {...}, ..., {...} ]
+        },
+        {...}
+    ]
+}</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="php2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Ping Method</h6>
+                                        <p>The ping method will return an object containing an array of all GhostDB Cache Nodes that could be reached. It is used as follows:</p>
+                                        <pre><code class="language-python">servers = await cache.ping()</code></pre>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                                <div id="handlebars2" class="section-block">
+                                    <div class="code-block">
+                                        <h6>Error Types</h6>
+                                        <p>There are two GhostDB specific errors that might be thrown during the execution of GhostDB methods. The first is the <code>GhostNoMoreServersError</code>. This error will be thrown if no servers in your cache cluster are reachable. The second is the <code>GhostKeyError</code>. This error is thrown if any key you provide to a GhostDB storage, deletion or retrieval method is not of type string. You can catch these errors as follows:</p>
+                                        <pre><code class="language-python">try { 
+    // Your code here
+}
+catch (e) {:
+    if (e instanceof cache.GhostNoMoreServersError) {
+        // Handle exception
+    }
+}</code></pre>
+                                        <p>Replace <code>ghostdb.GhostNoMoreServersError</code> with <code>ghostdb.GhostKeyError</code> to catch the key error.</p>
+                                    </div><!--//code-block-->
+                                </div><!--//section-block-->
+                            </section><!--//doc-section-->
+                            
+                            
+                            </section><!--//doc-section-->
+                        </div><!--//content-inner-->
+                    </div><!--//doc-content-->
+                    <div class="doc-sidebar col-md-3 col-12 order-0 d-none d-md-flex">
+                        <div id="doc-nav" class="doc-nav">
+	                        
+	                            <nav id="doc-menu" class="nav doc-menu flex-column sticky">
+	                                <a class="nav-link scrollto" href="#installation-section">GhostDB Node</a>
+                                    <nav class="doc-sub-menu nav flex-column">
+                                        <a class="nav-link scrollto" href="#step1">Installation</a>
+                                        <a class="nav-link scrollto" href="#step2">Configuration</a>
+                                        <a class="nav-link scrollto" href="#step3">Step Three</a>
+                                    </nav><!--//nav-->
+	                                <a class="nav-link scrollto" href="#code-section">GhostDB SDK for Python</a>
+                                    <nav class="doc-sub-menu nav flex-column">
+                                        <a class="nav-link scrollto" href="#html">Installation</a>
+                                        <a class="nav-link scrollto" href="#css">Importing GhostDB</a>
+                                        <a class="nav-link scrollto" href="#sass">Retrieval Methods</a>
+                                        <a class="nav-link scrollto" href="#less">Storage Methods</a>
+                                        <a class="nav-link scrollto" href="#javascript">Deletion Methods</a>
+                                        <a class="nav-link scrollto" href="#python">Metrics Methods</a>
+                                        <a class="nav-link scrollto" href="#php">Ping Method</a>
+                                        <a class="nav-link scrollto" href="#handlebars">Error Types</a>
+                                    </nav><!--//nav-->
+	                                <a class="nav-link scrollto" href="#callouts-section">GhostDB SDK for Node.js</a>
+                                    <nav class="doc-sub-menu nav flex-column">
+                                        <a class="nav-link scrollto" href="#html2">Installation</a>
+                                        <a class="nav-link scrollto" href="#css2">Importing GhostDB</a>
+                                        <a class="nav-link scrollto" href="#sass2">Retrieval Methods</a>
+                                        <a class="nav-link scrollto" href="#less2">Storage Methods</a>
+                                        <a class="nav-link scrollto" href="#javascript2">Deletion Methods</a>
+                                        <a class="nav-link scrollto" href="#python2">Metrics Methods</a>
+                                        <a class="nav-link scrollto" href="#php2">Ping Method</a>
+                                        <a class="nav-link scrollto" href="#handlebars2">Error Types</a>
+                                    </nav><!--//nav-->
+	                            </nav><!--//doc-menu-->
+	                        
+                        </div>
+                    </div><!--//doc-sidebar-->
+                </div><!--//doc-body-->              
+            </div><!--//container-->
+        </div><!--//doc-wrapper-->
+        
+        
+    </div><!--//page-wrapper-->
+    
+    <footer id="footer" class="footer text-center">
+        <div class="container">
+            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
+            <small class="copyright">Designed with <i class="fas fa-heart"></i> by <a href="https://themes.3rdwavemedia.com/" target="_blank">Xiaoying Riley</a> for developers</small>
+            
+        </div><!--//container-->
+    </footer><!--//footer-->
+    
+     
+    <!-- Main Javascript -->          
+    <script type="text/javascript" src="assets/plugins/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="assets/plugins/prism/prism.js"></script>    
+    <script type="text/javascript" src="assets/plugins/jquery-scrollTo/jquery.scrollTo.min.js"></script>      
+    <script type="text/javascript" src="assets/plugins/stickyfill/dist/stickyfill.min.js"></script>                                                             
+    <script type="text/javascript" src="assets/js/main.js"></script>
+    
+</body>
+</html> 
+
