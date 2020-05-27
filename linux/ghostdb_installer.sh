@@ -26,6 +26,7 @@ fi
 cp ghostdb /bin/
 cp ghostdb.service /lib/systemd/system
 cp ghostdbConf.json /etc/ghostdb
+chmod 755 /bin/ghostdb
 chmod 755 /lib/systemd/system/ghostdb.service
 chmod 755 /etc/ghostdb/ghostdbConf.json
 chown -R ghostdbservice:ghostdbservice /home/ghostdbservice
